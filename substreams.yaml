@@ -8,6 +8,7 @@ package:
 imports:
   entities: https://github.com/streamingfast/substreams-sink-entity-changes/releases/download/v1.3.1/substreams-sink-entity-changes-v1.3.1.spkg
   antelope: https://github.com/pinax-network/firehose-antelope/releases/download/v0.0.5/antelope-v0.0.5.spkg
+  common: https://spkg.io/pinax-network/antelope-common-v0.3.0.spkg
 
 binaries:
   default:
@@ -15,28 +16,10 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/antelope_claimrewards.wasm
 
 modules:
-  - name: map_events
-    kind: map
-    inputs:
-      - source: sf.antelope.type.v1.Block
-    output:
-      type: proto:sf.antelope.type.v1.TransactionTraces
-
-  - name: index_events
-    kind: blockIndex
-    inputs:
-      - map: map_events
-    output:
-      type: proto:sf.substreams.index.v1.Keys
-
   - name: graph_out
     kind: map
+    initialBlock: 300000000
     inputs:
-      - map: map_events
-    blockFilter:
-      module: index_events
-      query:
-        string: claimrewards
-        params: false
+      - map: common:filtered_transactions
     output:
       type: proto:sf.substreams.sink.entity.v1.EntityChanges
