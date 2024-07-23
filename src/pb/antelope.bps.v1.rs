@@ -20,8 +20,6 @@ pub struct Pay {
     #[prost(string, tag="8")]
     pub quantity: ::prost::alloc::string::String,
     /// extras
-    #[prost(uint32, tag="10")]
-    pub precision: u32,
     #[prost(int64, tag="11")]
     pub amount: i64,
     #[prost(double, tag="12")]

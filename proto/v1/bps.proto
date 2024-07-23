@@ -18,7 +18,6 @@ message Pay {
   string quantity = 8;
 
   // extras
-  uint32 precision = 10;
   int64 amount = 11;
   double value = 12;
 

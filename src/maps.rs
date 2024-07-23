@@ -1,3 +1,4 @@
+use antelope::Asset;
 use prost_types::Timestamp;
 use substreams::errors::Error;
 // use substreams::log;
@@ -8,6 +9,7 @@ use substreams_antelope::pb::{ActionTrace, TransactionTraces};
 
 impl Pay {
     fn new(transfer: abi::actions::Transfer, action: &ActionTrace) -> Self {
+        let quantity = Asset::from(transfer.quantity.as_str());
         Pay {
             bp: transfer.to,
             quantity: transfer.quantity,
@@ -18,7 +20,8 @@ impl Pay {
             }),
             trx_id: action.transaction_id.clone(),
             action_index: action.action_ordinal,
-            ..Default::default()
+            amount: quantity.amount,
+            value: quantity.value(),
         }
     }
 }
