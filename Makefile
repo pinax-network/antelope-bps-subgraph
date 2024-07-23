@@ -1,9 +1,14 @@
 .PHONY: all
 all:
+	make protogen
 	make build
 	make pack
 	make graph
 	make info
+
+.PHONY: protogen
+protogen:
+	substreams protogen --exclude-paths sf/substreams,google
 
 .PHONY: build
 build:

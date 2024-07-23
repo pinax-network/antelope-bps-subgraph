@@ -15,11 +15,28 @@ binaries:
     type: wasm/rust-v1
     file: ./target/wasm32-unknown-unknown/release/antelope_claimrewards.wasm
 
+protobuf:
+  files:
+    - bps.proto
+  importPaths:
+    - ./proto/v1
+
 modules:
-  - name: graph_out
+  - name: map_pays
     kind: map
-    initialBlock: 300000000
+    # initialBlock: 300000000
     inputs:
       - map: common:filtered_transactions
     output:
+      type: proto:antelope.bps.v1.Pays
+
+  - name: graph_out
+    kind: map
+    # initialBlock: 300000000
+    inputs:
+      - map: map_pays
+    output:
       type: proto:sf.substreams.sink.entity.v1.EntityChanges
+
+params:
+  "common:filtered_transactions": "code:eosio && action:claimrewards"

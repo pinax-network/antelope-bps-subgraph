@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package antelope.bps.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Pays {
+  repeated Pay vpays = 1;
+  repeated Pay bpays = 2;
+}
+
+message Pay {
+  // trace information
+  string trx_id = 1;
+  uint32 action_index = 2;
+
+  string bp = 7;
+  string quantity = 8;
+
+  // extras
+  uint32 precision = 10;
+  int64 amount = 11;
+  double value = 12;
+
+  // block information
+  uint64 block_num = 13;
+  google.protobuf.Timestamp timestamp = 14;
+}

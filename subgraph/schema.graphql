@@ -1,23 +1,14 @@
-type claimrewards @entity {
+type pay @entity {
   id: ID!
-  block_num: String!
+  block_num: BigInt!
   timestamp: String!
   transaction_id: String!
-  action_ordinal: String!
-  account: String!
-  name: String!
-  json_data: String!
-  raw_data: String!
+  type: PayType!
+  bp: String!
+  quantity: String!
 }
 
-type transfer @entity {
-  id: ID!
-  block_num: String!
-  timestamp: String!
-  transaction_id: String!
-  action_ordinal: String!
-  account: String!
-  name: String!
-  json_data: String!
-  raw_data: String!
+enum PayType {
+  VOTE
+  BLOCK
 }
