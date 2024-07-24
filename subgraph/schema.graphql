@@ -6,9 +6,18 @@ type pay @entity {
   type: PayType!
   bp: String!
   quantity: String!
+  value: BigDecimal!
 }
 
 enum PayType {
   VOTE
   BLOCK
+}
+
+type bp @entity {
+  id: ID!
+  name: String!
+  paid_value: BigDecimal!
+  paid_quantity: String!
+  paid_count: Int!
 }

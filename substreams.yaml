@@ -39,4 +39,4 @@ modules:
       type: proto:sf.substreams.sink.entity.v1.EntityChanges
 
 params:
-  "common:filtered_transactions": "code:eosio && action:claimrewards"
+  "common:filtered_transactions": "action:claimrewards"
