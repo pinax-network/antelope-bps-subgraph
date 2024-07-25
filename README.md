@@ -19,12 +19,21 @@ $ make gui
 
 ```mermaid
 graph TD;
-  map_events[map: map_events];
-  sf.antelope.type.v1.Block[source: sf.antelope.type.v1.Block] --> map_events;
-  map_events --> index_events;
+  map_pays[map: map_pays];
+  common:filtered_transactions --> map_pays;
   graph_out[map: graph_out];
-  map_events --> graph_out;
-  index_events -.-> |blockIndex| graph_out;
+  map_pays --> graph_out;
+  common:all_actions --> common:index_actions;
+  common:all_transactions[map: common:all_transactions];
+  sf.antelope.type.v1.Block[source: sf.antelope.type.v1.Block] --> common:all_transactions;
+  common:all_actions[map: common:all_actions];
+  common:all_transactions --> common:all_actions;
+  common:filtered_transactions[map: common:filtered_transactions];
+  common:filtered_transactions:params[params] --> common:filtered_transactions;
+  common:all_transactions --> common:filtered_transactions;
+  common:filtered_actions[map: common:filtered_actions];
+  common:filtered_actions:params[params] --> common:filtered_actions;
+  common:all_actions --> common:filtered_actions;
 ```
 
 ### Modules
@@ -35,25 +44,18 @@ Version: v0.1.0
 Doc: Antelope Block Producer claim rewards (Block Pay & Vote Pay).
 Modules:
 ----
-Name: map_events
+Name: map_pays
 Initial block: 0
 Kind: map
-Input: source: sf.antelope.type.v1.Block
-Output Type: proto:sf.antelope.type.v1.TransactionTraces
-Hash: 1c22c3cb8a845fed5543034d1f92988166ef15e3
-
-Name: index_events
-Initial block: 0
-Kind: index
-Input: map: map_events
-Output Type: proto:sf.substreams.index.v1.Keys
-Hash: 6ff8db036166afe2e632385f5c5e803048a3ffb4
+Input: map: common:filtered_transactions
+Output Type: proto:antelope.bps.v1.Pays
+Hash: b64fab3af9bcc4bace45dc10a0cc8c496811413e
 
 Name: graph_out
 Initial block: 0
 Kind: map
-Input: map: map_events
-Block Filter: (using *index_events*): `&{claimrewards}`
+Input: map: map_pays
 Output Type: proto:sf.substreams.sink.entity.v1.EntityChanges
-Hash: 5356733c34aa9dcf949860e29193ad3fd8916545
+Hash: 80655d596a546ac022f6ec5ff634a85e9216d7d3
+
 ```
