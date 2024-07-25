@@ -1,0 +1,23 @@
+type pay @entity {
+  id: ID!
+  block_num: BigInt!
+  timestamp: String!
+  transaction_id: String!
+  type: PayType!
+  bp: String!
+  quantity: String!
+  value: BigDecimal!
+}
+
+enum PayType {
+  VPAY
+  BPAY
+}
+
+type bp @entity {
+  id: ID!
+  name: String!
+  paid_value: BigDecimal!
+  paid_quantity: String!
+  paid_count: Int!
+}

@@ -8,35 +8,35 @@ package:
 imports:
   entities: https://github.com/streamingfast/substreams-sink-entity-changes/releases/download/v1.3.1/substreams-sink-entity-changes-v1.3.1.spkg
   antelope: https://github.com/pinax-network/firehose-antelope/releases/download/v0.0.5/antelope-v0.0.5.spkg
+  common: https://spkg.io/pinax-network/antelope-common-v0.3.0.spkg
 
 binaries:
   default:
     type: wasm/rust-v1
     file: ./target/wasm32-unknown-unknown/release/antelope_claimrewards.wasm
 
-modules:
-  - name: map_events
-    kind: map
-    inputs:
-      - source: sf.antelope.type.v1.Block
-    output:
-      type: proto:sf.antelope.type.v1.TransactionTraces
+protobuf:
+  files:
+    - bps.proto
+  importPaths:
+    - ./proto/v1
 
-  - name: index_events
-    kind: blockIndex
+modules:
+  - name: map_pays
+    kind: map
+    # initialBlock: 300000000
     inputs:
-      - map: map_events
+      - map: common:filtered_transactions
     output:
-      type: proto:sf.substreams.index.v1.Keys
+      type: proto:antelope.bps.v1.Pays
 
   - name: graph_out
     kind: map
+    # initialBlock: 300000000
     inputs:
-      - map: map_events
-    blockFilter:
-      module: index_events
-      query:
-        string: claimrewards
-        params: false
+      - map: map_pays
     output:
       type: proto:sf.substreams.sink.entity.v1.EntityChanges
+
+params:
+  "common:filtered_transactions": "code:eosio && action:claimrewards"

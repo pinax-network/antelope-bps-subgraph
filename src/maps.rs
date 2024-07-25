@@ -1,26 +1,59 @@
-use std::collections::HashSet;
-
+use antelope::Asset;
+use prost_types::Timestamp;
 use substreams::errors::Error;
 // use substreams::log;
-use substreams_antelope::pb::TransactionTraces;
-use substreams_antelope::Block;
+use crate::abi;
+use crate::pb::antelope::bps::v1::{Pay, Pays};
+use substreams_antelope::decoder::decode;
+use substreams_antelope::pb::{ActionTrace, TransactionTraces};
+
+impl Pay {
+    fn new(transfer: abi::actions::Transfer, action: &ActionTrace) -> Self {
+        let quantity = Asset::from(transfer.quantity.as_str());
+        Pay {
+            bp: transfer.to,
+            quantity: transfer.quantity,
+            block_num: action.block_num,
+            timestamp: Some(Timestamp {
+                seconds: action.block_time.as_ref().unwrap().seconds,
+                nanos: 0,
+            }),
+            trx_id: action.transaction_id.clone(),
+            action_index: action.action_ordinal,
+            amount: quantity.amount,
+            value: quantity.value(),
+        }
+    }
+}
 
 #[substreams::handlers::map]
-fn map_events(block: Block) -> Result<TransactionTraces, Error> {
-    let mut allowed_actions = HashSet::new();
+pub fn map_pays(transactions: TransactionTraces) -> Result<Pays, Error> {
+    let pays = transactions.transaction_traces.iter().fold(
+        Default::default(),
+        |mut pays: Pays, transaction_trace| {
+            for action_trace in transaction_trace.action_traces.iter() {
+                let action = action_trace.action.as_ref().unwrap();
+                if action_trace.receiver != action.account
+                    || action.name != "transfer"
+                    || action.account != "eosio.token"
+                {
+                    continue;
+                }
+                let transfer = decode::<abi::actions::Transfer>(&action.json_data)
+                    .expect(&format!("failed to unwrap json for action: {:?}", action));
+                match transfer.from.as_str() {
+                    "eosio.vpay" => {
+                        pays.vpays.push(Pay::new(transfer, action_trace));
+                    }
+                    "eosio.bpay" => {
+                        pays.bpays.push(Pay::new(transfer, action_trace));
+                    }
+                    _ => {}
+                }
+            }
+            pays
+        },
+    );
 
-    allowed_actions.insert("eosio::claimrewards".to_string());
-
-    let transaction_traces = block.into_transaction_traces().filter_map(|transaction_trace| {
-        for action_trace in transaction_trace.clone().action_traces {
-            let action = action_trace.clone().action.unwrap();
-            let key = format!("{}::{}", action.account.clone().to_string(), action.name.to_string());
-            if !allowed_actions.contains(&key) { continue; }
-            return Some(transaction_trace)
-        }
-        return None;
-
-    }).collect::<Vec<_>>();
-
-    Ok( TransactionTraces{transaction_traces} )
+    Ok(pays)
 }
