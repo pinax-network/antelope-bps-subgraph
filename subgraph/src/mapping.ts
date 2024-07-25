@@ -3,6 +3,7 @@ import { Pays } from "./pb/antelope/bps/v1/Pays";
 import { Pay } from "./pb/antelope/bps/v1/Pay";
 import { pay as PayEntity, bp as BpEntity} from "../generated/schema";
 import { Protobuf } from 'as-proto/assembly';
+import { Timestamp } from "./pb/google/protobuf/Timestamp";
 
 function addAssets(quantity1: string, quantity2: string): string {
     const asset1 = quantity1.split(" ");
@@ -45,7 +46,13 @@ function findPay(pays: Array<Pay>, key: string): Pay | null {
       }
     }
     return null;
-  }
+}
+
+function timestampToString(timestamp: Timestamp): string {
+    const milliseconds = timestamp.seconds * 1000 + timestamp.nanos / 1000000;
+    const date = new Date(milliseconds);
+    return date.toISOString();
+}
 
 export function handlePays(bytes: Uint8Array): void {
     const paysProto: Pays = Protobuf.decode<Pays>(bytes, Pays.decode);
@@ -64,18 +71,20 @@ export function handlePays(bytes: Uint8Array): void {
         const payEntity = new PayEntity(key);
         payEntity.bp = pay.bp;
         payEntity.transaction_id = pay.trxId;
-        payEntity.type = findPay(paysProto.vpays, key) ? "vpay" : "bpay";
+        payEntity.type = findPay(paysProto.vpays, key) ? "VPAY" : "VPAY";
         payEntity.quantity = pay.quantity;
         payEntity.value = toBigDecimal(pay.value);
         payEntity.block_num = BigInt.fromU64(pay.blockNum);
+        payEntity.timestamp = timestampToString(pay.timestamp!);
         payEntity.save();
 
-        let bpEntity = BpEntity.load(key)
+        let bpEntity = BpEntity.load(pay.bp)
         if(!bpEntity) {
-            bpEntity = new BpEntity(key);
+            bpEntity = new BpEntity(pay.bp);
             bpEntity.name = pay.bp;
             bpEntity.paid_value = toBigDecimal(pay.value);
             bpEntity.paid_quantity = pay.quantity;
+            bpEntity.paid_count = 1;
         }
         else {
             bpEntity.paid_value += toBigDecimal(pay.value);

@@ -10,8 +10,8 @@ type pay @entity {
 }
 
 enum PayType {
-  VOTE
-  BLOCK
+  VPAY
+  BPAY
 }
 
 type bp @entity {

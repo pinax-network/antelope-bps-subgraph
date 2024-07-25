@@ -2,6 +2,7 @@
   "name": "bps",
   "license": "UNLICENSED",
   "scripts": {
+    "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ bps",
     "create-local": "graph create --node http://localhost:8020/ bps",

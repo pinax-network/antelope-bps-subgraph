@@ -12,7 +12,7 @@ ingestor = "block_ingestor_node"
 protocol = "substreams"
 shard = "primary"
 provider = [
-    { label = "substreams-eos", details = { type = "substreams", url = "http://eos-sfst79.mar.eosn.io:9000" } },
+    { label = "substreams-eos", details = { type = "substreams", url = "http://eos-sfst143.mar.eosn.io:9000" } },
 ]
 
 [deployment]
