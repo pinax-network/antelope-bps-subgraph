@@ -1,0 +1,13 @@
+{
+  "name": "eos-bp-rewards",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ eos-bp-rewards",
+    "create-local": "graph create --node http://localhost:8020/ eos-bp-rewards",
+    "remove-local": "graph remove --node http://localhost:8020/ eos-bp-rewards",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eos-bp-rewards",
+    "test": "graph test"
+  },
+  "dependencies": { "@graphprotocol/graph-cli": "0.79.0" }
+}

@@ -1,7 +1,7 @@
 import { BigInt, BigDecimal, log } from "@graphprotocol/graph-ts";
 import { Pays } from "./pb/antelope/bps/v1/Pays";
 import { Pay } from "./pb/antelope/bps/v1/Pay";
-import { pay as PayEntity, bp as BpEntity} from "../generated/schema";
+import { Pay as PayEntity, Bp as BpEntity} from "../generated/schema";
 import { Protobuf } from 'as-proto/assembly';
 import { Timestamp } from "./pb/google/protobuf/Timestamp";
 

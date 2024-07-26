@@ -1,14 +1,14 @@
 specVersion: v0.1.0
 package:
   name: antelope_claimrewards
-  version: v0.1.0
+  version: v0.2.0
   url: https://github.com/pinax-network/substreams-antelope-claimrewards
   doc: Antelope Block Producer claim rewards (Block Pay & Vote Pay).
 
 imports:
   entities: https://github.com/streamingfast/substreams-sink-entity-changes/releases/download/v1.3.1/substreams-sink-entity-changes-v1.3.1.spkg
   antelope: https://github.com/pinax-network/firehose-antelope/releases/download/v0.0.5/antelope-v0.0.5.spkg
-  common: https://spkg.io/pinax-network/antelope-common-v0.3.0.spkg
+  common: https://spkg.io/pinax-network/antelope-common-v0.4.0.spkg
 
 binaries:
   default:
@@ -24,7 +24,6 @@ protobuf:
 modules:
   - name: map_pays
     kind: map
-    # initialBlock: 300000000
     inputs:
       - map: common:filtered_transactions
     output:
@@ -32,7 +31,6 @@ modules:
 
   - name: graph_out
     kind: map
-    # initialBlock: 300000000
     inputs:
       - map: map_pays
     output:
