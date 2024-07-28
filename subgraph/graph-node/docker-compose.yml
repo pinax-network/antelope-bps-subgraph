@@ -1,37 +1,37 @@
 services:
-  # graph-node:
-  #   container_name: graph-node-bps
-  #   # image: graph-node:latest
-  #   image: graphprotocol/graph-node:v0.35.1
-  #   ports:
-  #     - '8000:8000'
-  #     - '8001:8001'
-  #     - '8020:8020'
-  #     - '8030:8030'
-  #     - '8040:8040'
-  #   depends_on:
-  #     ipfs:
-  #       condition: service_started
-  #     postgres:
-  #       condition: service_healthy
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
-  #   volumes:
-  #     - ./config:/data/config
-  #   environment:
-  #     postgres_host: postgres
-  #     postgres_user: graph-node
-  #     postgres_pass: let-me-in
-  #     postgres_db: graph-node
-  #     ipfs: 'ipfs:5001'
-  #     GRAPH_LOG: info
-  #     GRAPH_NODE_CONFIG: /data/config/substreams.toml
-  #     ETH_MAINNET_RPC: "${ETH_MAINNET_RPC}"
-  #     SUBSTREAMS_ENDPOINT: "${SUBSTREAMS_ENDPOINT}"
-  #     SUBSTREAMS_API_TOKEN: "${SUBSTREAMS_API_TOKEN}"
-  #     RUST_BACKTRACE: full
-  #     ETHEREUM_POLLING_INTERVAL: 10000
-  #   restart: "on-failure"
+  graph-node:
+    container_name: graph-node-bps
+    # image: graph-node:latest
+    image: graphprotocol/graph-node:f99d68c
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+      - '8020:8020'
+      - '8030:8030'
+      - '8040:8040'
+    depends_on:
+      ipfs:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./config:/data/config
+    environment:
+      postgres_host: postgres
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      GRAPH_LOG: info
+      GRAPH_NODE_CONFIG: /data/config/substreams.toml
+      ETH_MAINNET_RPC: "${ETH_MAINNET_RPC}"
+      SUBSTREAMS_ENDPOINT: "${SUBSTREAMS_ENDPOINT}"
+      SUBSTREAMS_API_TOKEN: "${SUBSTREAMS_API_TOKEN}"
+      RUST_BACKTRACE: full
+      ETHEREUM_POLLING_INTERVAL: 10000
+    restart: "on-failure"
   ipfs:
     container_name: ipfs-bps
     image: ipfs/kubo:v0.14.0
