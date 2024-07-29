@@ -18,5 +18,3 @@ Cargo.lock
 *.clock
 *.cursor
 *.session
-
-buf.gen.yaml

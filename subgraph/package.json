@@ -1,13 +1,13 @@
 {
-  "name": "eos-bp-rewards",
+  "name": "eos-bps",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ eos-bp-rewards",
-    "create-local": "graph create --node http://localhost:8020/ eos-bp-rewards",
-    "remove-local": "graph remove --node http://localhost:8020/ eos-bp-rewards",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eos-bp-rewards",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ eos-bps",
+    "create-local": "graph create --node http://localhost:8020/ eos-bps",
+    "remove-local": "graph remove --node http://localhost:8020/ eos-bps",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eos-bps",
     "test": "graph test"
   },
   "dependencies": {

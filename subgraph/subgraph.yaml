@@ -3,14 +3,14 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: substreams
-    name: Pays
+    name: Bps
     network: eos
     source:
       package:
-        moduleName: map_pays
-        file: ../antelope-claimrewards-v0.2.0.spkg
+        moduleName: map_bps
+        file: ../antelope-claimrewards-v0.3.0.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities
       file: ./src/mapping.ts
-      handler: handlePays
+      handler: handleBps

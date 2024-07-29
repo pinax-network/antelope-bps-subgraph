@@ -1,8 +1,8 @@
 type Pay @entity {
   id: ID!
-  block_num: BigInt!
+  blockNum: BigInt!
   timestamp: String!
-  transaction_id: String!
+  transactionId: String!
   type: PayType!
   bp: Bp!
   quantity: String!
@@ -17,8 +17,17 @@ enum PayType {
 type Bp @entity {
   id: ID!
   name: String!
+  location: Int!
+  url: String!
+  publicKey: String!
+
+  updateBlockNum: BigInt!
+  updateTimestamp: String!
+  updateCount: Int!
+  prevUpdateBlockNum: BigInt
+
   pays: [Pay!]! @derivedFrom(field: "bp")
-  paid_value: BigDecimal!
-  paid_quantity: String!
-  paid_count: Int!
+  paidValue: BigDecimal!
+  paidQuantity: String
+  paidCount: Int!
 }

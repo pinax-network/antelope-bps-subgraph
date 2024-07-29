@@ -4,9 +4,10 @@
 
 import { Writer, Reader } from "as-proto/assembly";
 import { Pay } from "./Pay";
+import { Reg } from "./Reg";
 
-export class Pays {
-  static encode(message: Pays, writer: Writer): void {
+export class Bps {
+  static encode(message: Bps, writer: Writer): void {
     const vpays = message.vpays;
     for (let i: i32 = 0; i < vpays.length; ++i) {
       writer.uint32(10);
@@ -22,11 +23,19 @@ export class Pays {
       Pay.encode(bpays[i], writer);
       writer.ldelim();
     }
+
+    const regs = message.regs;
+    for (let i: i32 = 0; i < regs.length; ++i) {
+      writer.uint32(26);
+      writer.fork();
+      Reg.encode(regs[i], writer);
+      writer.ldelim();
+    }
   }
 
-  static decode(reader: Reader, length: i32): Pays {
+  static decode(reader: Reader, length: i32): Bps {
     const end: usize = length < 0 ? reader.end : reader.ptr + length;
-    const message = new Pays();
+    const message = new Bps();
 
     while (reader.ptr < end) {
       const tag = reader.uint32();
@@ -37,6 +46,10 @@ export class Pays {
 
         case 2:
           message.bpays.push(Pay.decode(reader, reader.uint32()));
+          break;
+
+        case 3:
+          message.regs.push(Reg.decode(reader, reader.uint32()));
           break;
 
         default:
@@ -50,9 +63,15 @@ export class Pays {
 
   vpays: Array<Pay>;
   bpays: Array<Pay>;
+  regs: Array<Reg>;
 
-  constructor(vpays: Array<Pay> = [], bpays: Array<Pay> = []) {
+  constructor(
+    vpays: Array<Pay> = [],
+    bpays: Array<Pay> = [],
+    regs: Array<Reg> = []
+  ) {
     this.vpays = vpays;
     this.bpays = bpays;
+    this.regs = regs;
   }
 }

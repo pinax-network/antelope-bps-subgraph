@@ -4,9 +4,10 @@ package antelope.bps.v1;
 
 import "google/protobuf/timestamp.proto";
 
-message Pays {
+message Bps {
   repeated Pay vpays = 1;
   repeated Pay bpays = 2;
+  repeated Reg regs = 3;
 }
 
 message Pay {
@@ -21,6 +22,22 @@ message Pay {
   int64 amount = 11;
   double value = 12;
 
+  // block information
+  uint64 block_num = 13;
+  google.protobuf.Timestamp timestamp = 14;
+}
+
+message Reg {
+  string trx_id = 1;
+  uint32 action_index = 2;
+  
+  
+  string bp = 5;
+  string url = 6;
+  uint32 location = 7;
+  string public_key = 8;
+
+  
   // block information
   uint64 block_num = 13;
   google.protobuf.Timestamp timestamp = 14;

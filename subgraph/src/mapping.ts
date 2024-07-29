@@ -1,42 +1,10 @@
-import { BigInt, BigDecimal, log } from "@graphprotocol/graph-ts";
-import { Pays } from "./pb/antelope/bps/v1/Pays";
+import { BigInt, log } from "@graphprotocol/graph-ts";
+import { Bps } from "./pb/antelope/bps/v1/Bps";
 import { Pay } from "./pb/antelope/bps/v1/Pay";
 import { Pay as PayEntity, Bp as BpEntity} from "../generated/schema";
 import { Protobuf } from 'as-proto/assembly';
-import { Timestamp } from "./pb/google/protobuf/Timestamp";
+import { addAssets, timestampToString, toBigDecimal } from "./utils";
 
-function addAssets(quantity1: string, quantity2: string): string {
-    const asset1 = quantity1.split(" ");
-    const asset2 = quantity2.split(" ");
-    if (asset1[1] != asset2[1]) {
-        throw `symbols mismach: ${asset1[1]} != ${asset2[1]}`;
-    }
-    const sum = parseFloat(asset1[0]) + parseFloat(asset2[0]);
-    return `${toFixed(sum, 4)} ${asset1[1]}`;
-
-}
-
-
-function toBigDecimal(num: f64): BigDecimal {
-    let numStr = toFixed(num, 18); // Adjust precision as needed
-    return BigDecimal.fromString(numStr);
-}
-
-function toFixed(num: f64, decimals: i32): string {
-    let factor = Math.pow(10, decimals) as f64;
-    let rounded = Math.round(num * factor) / factor;
-    let result = rounded.toString();
-    let dotIndex = result.indexOf(".");
-    if (dotIndex == -1) {
-        result += ".";
-        dotIndex = result.length - 1;
-    }
-    let decimalPartLength = result.length - dotIndex - 1;
-    for (let i = 0; i < decimals - decimalPartLength; i++) {
-        result += "0";
-    }
-    return result;
-}
 
 function findPay(pays: Array<Pay>, key: string): Pay | null {
     for (let i = 0; i < pays.length; i++) {
@@ -48,19 +16,31 @@ function findPay(pays: Array<Pay>, key: string): Pay | null {
     return null;
 }
 
-function timestampToString(timestamp: Timestamp): string {
-    const milliseconds = timestamp.seconds * 1000 + timestamp.nanos / 1000000;
-    const date = new Date(milliseconds);
-    return date.toISOString();
-}
 
-export function handlePays(bytes: Uint8Array): void {
-    const paysProto: Pays = Protobuf.decode<Pays>(bytes, Pays.decode);
-    const pays = paysProto.vpays.concat(paysProto.bpays);
+export function handleBps(bytes: Uint8Array): void {
+    const bpsProto: Bps = Protobuf.decode<Bps>(bytes, Bps.decode);
+    const pays = bpsProto.vpays.concat(bpsProto.bpays);
 
-    if (pays.length == 0) {
-        log.info("No pays found", []);
-        return;
+    for (let i=0; i<bpsProto.regs.length; i++){
+        const reg = bpsProto.regs[i];
+        let bpEntity = BpEntity.load(reg.bp);
+        if(!bpEntity) {
+            bpEntity = new BpEntity(reg.bp);
+            bpEntity.paidValue = toBigDecimal(0);
+            bpEntity.paidCount = 0;
+            bpEntity.updateCount = 0;
+        }
+        else {
+            bpEntity.prevUpdateBlockNum = bpEntity.updateBlockNum;
+        }
+        bpEntity.name = reg.bp;
+        bpEntity.url = reg.url;
+        bpEntity.location = reg.location;
+        bpEntity.publicKey = reg.publicKey;
+        bpEntity.updateBlockNum = BigInt.fromU64(reg.blockNum);
+        bpEntity.updateTimestamp = timestampToString(reg.timestamp!);
+        bpEntity.updateCount += 1;
+        bpEntity.save();
     }
 
     for (let i=0; i<pays.length; i++) {
@@ -70,26 +50,27 @@ export function handlePays(bytes: Uint8Array): void {
 
         const payEntity = new PayEntity(key);
         payEntity.bp = pay.bp;
-        payEntity.transaction_id = pay.trxId;
-        payEntity.type = findPay(paysProto.vpays, key) ? "VPAY" : "VPAY";
+        payEntity.transactionId = pay.trxId;
+        payEntity.type = findPay(bpsProto.vpays, key) ? "VPAY" : "VPAY";
         payEntity.quantity = pay.quantity;
         payEntity.value = toBigDecimal(pay.value);
-        payEntity.block_num = BigInt.fromU64(pay.blockNum);
+        payEntity.blockNum = BigInt.fromU64(pay.blockNum);
         payEntity.timestamp = timestampToString(pay.timestamp!);
         payEntity.save();
 
         let bpEntity = BpEntity.load(pay.bp)
         if(!bpEntity) {
             bpEntity = new BpEntity(pay.bp);
-            bpEntity.name = pay.bp;
-            bpEntity.paid_value = toBigDecimal(pay.value);
-            bpEntity.paid_quantity = pay.quantity;
-            bpEntity.paid_count = 1;
+        }
+        if(bpEntity.paidCount == 0) {
+            bpEntity.paidValue = toBigDecimal(pay.value);
+            bpEntity.paidQuantity = pay.quantity;
+            bpEntity.paidCount = 1;
         }
         else {
-            bpEntity.paid_value += toBigDecimal(pay.value);
-            bpEntity.paid_count += 1;
-            bpEntity.paid_quantity = addAssets(bpEntity.paid_quantity, pay.quantity);
+            bpEntity.paidValue + toBigDecimal(pay.value);
+            bpEntity.paidCount += 1;
+            bpEntity.paidQuantity = addAssets(bpEntity.paidQuantity!, pay.quantity);
         }
         bpEntity.save();
     }
