@@ -8,7 +8,7 @@ all:
 
 .PHONY: protogen
 protogen:
-	substreams protogen --exclude-paths sf/substreams,google
+	substreams protogen --exclude-paths sf,google
 
 .PHONY: build
 build:
