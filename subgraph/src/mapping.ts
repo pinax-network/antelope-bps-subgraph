@@ -1,7 +1,7 @@
 import { BigInt, log } from "@graphprotocol/graph-ts";
 import { Bps } from "./pb/antelope/bps/v1/Bps";
 import { Pay } from "./pb/antelope/bps/v1/Pay";
-import { Pay as PayEntity, Bp as BpEntity} from "../generated/schema";
+import { Pay as PayEntity, Bp as BpEntity, Registration as RegistrationEntity} from "../generated/schema";
 import { Protobuf } from 'as-proto/assembly';
 import { addAssets, timestampToString, toBigDecimal } from "./utils";
 
@@ -28,19 +28,19 @@ export function handleBps(bytes: Uint8Array): void {
             bpEntity = new BpEntity(reg.bp);
             bpEntity.paidValue = toBigDecimal(0);
             bpEntity.paidCount = 0;
-            bpEntity.updateCount = 0;
-        }
-        else {
-            bpEntity.prevUpdateBlockNum = bpEntity.updateBlockNum;
         }
         bpEntity.name = reg.bp;
-        bpEntity.url = reg.url;
-        bpEntity.location = reg.location;
-        bpEntity.publicKey = reg.publicKey;
-        bpEntity.updateBlockNum = BigInt.fromU64(reg.blockNum);
-        bpEntity.updateTimestamp = timestampToString(reg.timestamp!);
-        bpEntity.updateCount += 1;
         bpEntity.save();
+
+        const regEntity = new RegistrationEntity(`${reg.trxId}-${reg.actionIndex}`);
+        regEntity.bp = reg.bp;
+        regEntity.blockNum = BigInt.fromU64(reg.blockNum);
+        regEntity.timestamp = timestampToString(reg.timestamp!);
+        regEntity.url = reg.url;
+        regEntity.location = reg.location;
+        regEntity.publicKey = reg.publicKey;
+        regEntity.transactionId = reg.trxId;
+        regEntity.save();
     }
 
     for (let i=0; i<pays.length; i++) {
@@ -58,10 +58,7 @@ export function handleBps(bytes: Uint8Array): void {
         payEntity.timestamp = timestampToString(pay.timestamp!);
         payEntity.save();
 
-        let bpEntity = BpEntity.load(pay.bp)
-        if(!bpEntity) {
-            bpEntity = new BpEntity(pay.bp);
-        }
+        let bpEntity = BpEntity.load(pay.bp)!
         if(bpEntity.paidCount == 0) {
             bpEntity.paidValue = toBigDecimal(pay.value);
             bpEntity.paidQuantity = pay.quantity;

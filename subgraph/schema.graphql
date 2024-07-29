@@ -14,17 +14,23 @@ enum PayType {
   BPAY
 }
 
-type Bp @entity {
+type Registration @entity {
   id: ID!
-  name: String!
+  bp: Bp!
   location: Int!
   url: String!
   publicKey: String!
 
-  updateBlockNum: BigInt!
-  updateTimestamp: String!
-  updateCount: Int!
-  prevUpdateBlockNum: BigInt
+  transactionId: String!
+  blockNum: BigInt!
+  timestamp: String!
+}
+
+type Bp @entity {
+  id: ID!
+  name: String!
+
+  registrations: [Registration!]! @derivedFrom(field: "bp")
 
   pays: [Pay!]! @derivedFrom(field: "bp")
   paidValue: BigDecimal!
