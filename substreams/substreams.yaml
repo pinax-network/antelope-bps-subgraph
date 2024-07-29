@@ -1,8 +1,8 @@
 specVersion: v0.1.0
 package:
-  name: antelope_claimrewards
+  name: antelope_bps
   version: v0.3.0
-  url: https://github.com/pinax-network/substreams-antelope-claimrewards
+  url: https://github.com/pinax-network/antelope-bps-subgraph
   doc: Antelope Block Producer claim rewards (Block Pay & Vote Pay).
 
 imports:
@@ -13,7 +13,7 @@ imports:
 binaries:
   default:
     type: wasm/rust-v1
-    file: ./target/wasm32-unknown-unknown/release/antelope_claimrewards.wasm
+    file: ./target/wasm32-unknown-unknown/release/antelope_bps.wasm
 
 protobuf:
   files:

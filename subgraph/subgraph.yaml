@@ -8,7 +8,7 @@ dataSources:
     source:
       package:
         moduleName: map_bps
-        file: ../antelope-claimrewards-v0.3.0.spkg
+        file: ../substreams/antelope-bps-v0.3.0.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities

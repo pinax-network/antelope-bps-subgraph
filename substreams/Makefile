@@ -28,8 +28,8 @@ info:
 
 .PHONY: run
 run:
-	substreams run -e eos.substreams.pinax.network:443 map_pays -s 1000000 -t 2000000 --production-mode
+	substreams run -e eos.substreams.pinax.network:443 map_bps -s 1000000 -t 1100000 --production-mode
 
 .PHONY: gui
 gui:
-	substreams gui -e eos.substreams.pinax.network:443 map_pays -s 1000000 -t 2000000 --production-mode
+	substreams gui -e eos.substreams.pinax.network:443 map_bps -s 1000000 -t 1100000 --production-mode

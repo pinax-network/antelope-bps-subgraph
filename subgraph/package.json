@@ -2,7 +2,7 @@
   "name": "eos-bps",
   "license": "UNLICENSED",
   "scripts": {
-    "codegen": "graph codegen",
+    "codegen": "buf generate --exclude-path=\"sf/substreams\" --type=\"antelope.bps.v1.Bps\" ../substreams/antelope-bps-v0.3.0.spkg#format=bin && graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ eos-bps",
     "create-local": "graph create --node http://localhost:8020/ eos-bps",
