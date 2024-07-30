@@ -24,6 +24,7 @@ protobuf:
 modules:
   - name: map_bps
     kind: map
+    initialBlock: 2
     inputs:
       - map: common:filtered_transactions
     output:
