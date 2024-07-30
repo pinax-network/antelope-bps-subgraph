@@ -65,7 +65,7 @@ export function handleBps(bytes: Uint8Array): void {
             bpEntity.paidCount = 1;
         }
         else {
-            bpEntity.paidValue + toBigDecimal(pay.value);
+            bpEntity.paidValue += toBigDecimal(pay.value);
             bpEntity.paidCount += 1;
             bpEntity.paidQuantity = addAssets(bpEntity.paidQuantity!, pay.quantity);
         }
