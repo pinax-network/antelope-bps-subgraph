@@ -576,9 +576,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-antelope"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bcd7cbd8a7ab5818af13a6f057ae79133c30c46e601089479ffe1a64640e90a"
+checksum = "eba9c8e2389d2f82d4aeb97d69acf47947216788f7b2615b8de2d851e48ce063"
 dependencies = [
  "substreams",
  "substreams-antelope-abigen",
@@ -587,9 +587,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-antelope-abigen"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ef3266c4fc8e1dd1e7d5099cce87cff888dc6914918e5ec271e090525f9ac9e"
+checksum = "57b26cd343be2f960c1fdc48ea5e04bee4a902fa0faadee8d1a39a95e8f560ab"
 dependencies = [
  "anyhow",
  "heck",
@@ -604,9 +604,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-antelope-core"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cc7a8af2707736b55e585895d6385996ced514e27b02dc94f2166bff2477be2"
+checksum = "fbf9406cec602c517706d768535a26107fda07fc630fc2c814ddac9937d846a1"
 dependencies = [
  "prost",
  "prost-build",

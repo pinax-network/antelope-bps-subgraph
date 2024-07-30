@@ -2,6 +2,8 @@
 pub const ACCOUNT: Option<&'static str> = None;
 pub mod types {
     use substreams_antelope::types::*;
+    pub type BlockSigningAuthority = BlockSigningAuthorityV0;
+    pub type BlockchainParametersT = BlockchainParametersV1;
     #[derive(Debug, Clone, PartialEq, serde::Deserialize)]
     #[serde(deny_unknown_fields)]
     pub struct AbiHash {
@@ -130,8 +132,6 @@ pub mod types {
         pub threshold: Uint32,
         pub keys: Vec<KeyWeight>,
     }
-
-    pub type BlockSigningAuthority = BlockSigningAuthorityV0;
     impl std::str::FromStr for BlockSigningAuthorityV0 {
         type Err = substreams_antelope::Error;
         fn from_str(value: &str) -> Result<Self, Self::Err> {
@@ -177,7 +177,6 @@ pub mod types {
             substreams_antelope::decoder::decode::<Self>(value)
         }
     }
-    pub type BlockchainParametersT = BlockchainParametersV1;
     #[derive(Debug, Clone, PartialEq, serde::Deserialize)]
     #[serde(deny_unknown_fields)]
     pub struct Connector {
@@ -729,10 +728,10 @@ pub mod types {
     }
 }
 pub mod actions {
+    use substreams_antelope::types::*;
+    use substreams_antelope::decoder::decode;
     #[allow(unused_imports)]
     use super::types::*;
-    use substreams_antelope::decoder::decode;
-    use substreams_antelope::types::*;
     #[derive(Debug, Clone, PartialEq, serde::Deserialize)]
     #[serde(deny_unknown_fields)]
     pub struct Activate {

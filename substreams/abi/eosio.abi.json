@@ -2,7 +2,7 @@
     "version": "eosio::abi/1.2",
     "types": [{
         "new_type_name": "block_signing_authority",
-        "type": "variant_block_signing_authority_v0"
+        "type": "block_signing_authority_v0"
     }, {
         "new_type_name": "blockchain_parameters_t",
         "type": "blockchain_parameters_v1"
