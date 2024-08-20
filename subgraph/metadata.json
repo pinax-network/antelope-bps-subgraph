@@ -1,0 +1,10 @@
+{
+    "description": "EOS Block Producers registrations and payments",
+    "image": "ipfs://QmPAuFCHVT5sXdgpZKm6mt1AB3jvsazgX61coFhbVwWNAd",
+    "subgraphImage": "https://api.thegraph.com/ipfs/api/v0/cat?arg=QmPAuFCHVT5sXdgpZKm6mt1AB3jvsazgX61coFhbVwWNAd",
+    "displayName": "EOS Block Producers",
+    "name": "EOS Block Producers",
+    "codeRepository": "https://github.com/pinax-network/antelope-bps-subgraph",
+    "website": null,
+    "categories": null
+}
